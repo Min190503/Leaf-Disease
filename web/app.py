@@ -4,10 +4,26 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.resnet_v2 import preprocess_input as resnet_preprocess_input
 from PIL import Image
+from tensorflow.keras.utils import get_file 
 
 
-RESNET_MODEL_PATH = "https://huggingface.co/min190503/RN5/resolve/main/best_model_finetuned_RN.h5"
-CUSTOM_CNN_MODEL_PATH = "https://huggingface.co/min190503/RN5/resolve/main/best_model_CNN.h5"
+#  link Hugging Face 
+RESNET_HF_URL = "https://huggingface.co/min190503/RN5/resolve/main/best_model_finetuned_RN.h5" 
+CUSTOM_CNN_HF_URL = "https://huggingface.co/min190503/RN5/resolve/main/best_model_CNN.h5"
+
+#  TẢI MÔ HÌNH 
+try:
+    RESNET_MODEL_PATH = get_file(
+        "best_model_finetuned_RN.h5", 
+        origin=RESNET_HF_URL
+    )
+    CUSTOM_CNN_MODEL_PATH = get_file(
+        "best_model_CNN.h5", 
+        origin=CUSTOM_CNN_HF_URL
+    )
+except Exception as e:
+    st.error(f"Lỗi khi tải mô hình từ Hugging Face. Kiểm tra lại URL của bạn. Lỗi: {e}")
+    st.stop() 
 
 
 RESNET_IMG_SIZE = (256, 256) 
@@ -24,7 +40,7 @@ CLASS_NAMES = ['Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_r
                'Tomato___Spider_mites Two-spotted_spider_mite', 'Tomato___Target_Spot', 'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 
                'Tomato___Tomato_mosaic_virus', 'Tomato___healthy']
 
-
+# Tải Mô hình 
 
 @st.cache_resource
 def load_app_model(model_path):
@@ -38,7 +54,7 @@ def load_app_model(model_path):
 resnet_model = load_app_model(RESNET_MODEL_PATH)
 custom_cnn_model = load_app_model(CUSTOM_CNN_MODEL_PATH)
 
-# Hàm Tiền xử lý
+
 
 def preprocess_for_resnet(image_pil):
     """Tiền xử lý cho ResNetV2 (chuẩn hóa [-1, 1])"""
@@ -55,7 +71,7 @@ def preprocess_for_custom_cnn(image_pil):
     img_array_rescaled = img_array.astype(np.float32) / 255.0
     return np.expand_dims(img_array_rescaled, axis=0)
 
-# Giao diện Web
+#ui/ux
 
 st.set_page_config(layout="wide") 
 st.title("🌿 So sánh Mô hình Nhận diện Bệnh lá cây")
