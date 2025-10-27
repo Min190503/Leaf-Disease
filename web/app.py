@@ -100,7 +100,7 @@ with col2:
             with st.spinner('Đang phân tích... Xin vui lòng chờ.'):
                 
                 #  ResNet50V2
-                st.subheader("Mô hình ResNet50V2 (Học Chuyển giao)")
+                st.subheader("Mô hình ResNet50V2")
                 img_input_resnet = preprocess_for_resnet(image_pil)
                 pred_resnet = resnet_model.predict(img_input_resnet)[0]
                 
@@ -112,7 +112,7 @@ with col2:
                 st.divider() 
 
                 #CNN
-                st.subheader("Mô hình CNN Cơ bản (Tự xây dựng)")
+                st.subheader("Mô hình CNN Cơ bản")
                 img_input_custom = preprocess_for_custom_cnn(image_pil)
                 pred_custom = custom_cnn_model.predict(img_input_custom)[0]
                 
